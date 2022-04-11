@@ -78,10 +78,10 @@ def input_students
     puts "Please enter the student's country of birth"
     birthplace = gets.chomp
     puts "Please enter the student's cohort"
-    cohort = gets.chomp.to_sym #added .to_sym as per request of exercise 7. Not sure what this does...
+    cohort = gets.chomp #added .to_sym as per request of exercise 7. Not sure what this does...
       until months.include? cohort
         puts "Please enter the student's cohort!"
-        cohort = gets.chomp.to_sym
+        cohort = gets.chomp
       end
   end
   # return the array of students
@@ -100,10 +100,33 @@ end
 #   end
 # end
 
-# change the way students are printed to be by cohort
+# change the way students are printed to be by cohort - stuck. I know how to use
+#sort_by to organise the array of hashes by cohort... but I don't understand
+#how to get that info into a string as I did in the previous print method
+# def print(students)
+#   new_order = students.sort_by {|hash| hash[:cohort]}
+#   puts new_order
+#   new_order.each do |student|
+#     puts "#{student[:name]}, Height: #{student[:height]}, Birthplace: #{student[:birthplace]}, Hobbies: #{student[:hobbies]}. (#{student[:cohort]} cohort)"
+#   end
+# end
+
+# print student according to cohort
 def print(students)
-  students.each.with_index do |student, index|
-    puts "#{index+1}. #{student[:name]}, Height: #{student[:height]}, Birthplace: #{student[:birthplace]}, Hobbies: #{student[:hobbies]}. (#{student[:cohort]} cohort)".center(40, "-")
+  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  puts "enter cohort"
+  user = gets.chomp
+  until months.include? user
+    puts "enter cohort"
+    user = gets.chomp
+  end
+    students.each.with_index do |student, index|
+    if student[:cohort] == user
+      puts "#{index+1}: #{student[:name]}, Height: #{student[:height]}, Birthplace: #{student[:birthplace]}, Hobbies: #{student[:hobbies]}. (#{student[:cohort]} cohort)"
+    elsif student[:cohort] != user
+      puts "No students in this cohort"
+      #how to get this not to print when multiple cohorts?
+    end
   end
 end
 
