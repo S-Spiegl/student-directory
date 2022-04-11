@@ -1,29 +1,45 @@
+@students = []
+
 def interactive_menu
-  students = []
   loop do
     #Print menu and ask user what they want to do
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit"
     #read input and save it to a variable
-    selection = gets.chomp
+    print_menu
+    process(gets.chomp)
     #do what user has asked
-    case selection
-    when "1"
-      #input students
-      students = input_students
-    when "2"
-      #show students
-      print_header
-      print(students)
-      print_footer(students)
-    when "9"
-      exit
-    else
-      puts "I don't know what you mean. Try again"
-    end
   end
 end
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
+
+
+def show_students
+  print_header
+  print_students_list(@students)
+  print_footer(@students)
+end
+
+def process(selection)
+  case selection
+  when "1"
+    #input students
+    @students = input_students #a bit confused by this line. why not just input_students?
+    #really need to go through this and work out how these instance variables are interacting...
+  when "2"
+    show_students
+  when "9"
+    exit
+  else
+    puts "I don't know what you mean. Try again"
+  end
+end
+
+
+
 #ask for additional info
 def input_students
   puts "Please enter the name of the student"
@@ -78,7 +94,7 @@ def print_header
   puts "----------------------------------"
 end
 
-def print(students)
+def print_students_list(students)
   months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   puts "enter cohort"
   user = gets.chomp
@@ -105,7 +121,8 @@ def print_footer(names)
   #this only worked with puts, not with print... gave undefined method otherwise... wonder why...
 end
 
-students = input_students
-print_header
-print(students)
-print_footer(students)
+interactive_menu
+# students = input_students
+# print_header
+# print(@students)
+# print_footer(@students)
