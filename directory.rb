@@ -38,6 +38,7 @@ def input_students
   puts "Please enter the name of the student"
   puts "To finish, just hit return twice"
   students = []
+  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   #create an empty array
   #get the first name
   name = gets.chomp
@@ -47,11 +48,20 @@ def input_students
   height = gets.chomp
   puts "Please enter the student's country of birth"
   birthplace = gets.chomp
+  puts "Please enter the student's cohort"
+  cohort = gets.chomp #added .to_sym as per request of exercise 7. Not sure what this does...
+    until months.include? cohort
+      puts "Please enter the student's cohort!"
+      cohort = gets.chomp
+    end
+    # # if cohort.empty?
+    # #   cohort = "unspecified"
+    # end
   #while the name is not empty, repeat this code (i.e. as long as they enter something)
   while !name.empty?
     #add the student hash to the array - if you want to see the array, put a puts
     #before students below
-    students << {name: name, cohort: :november, hobbies: hobbies, height: height, birthplace: birthplace}
+    students << {name: name, cohort: cohort, hobbies: hobbies, height: height, birthplace: birthplace}
     if students.count == 1
       puts "Now we have #{students.count} student"
     else
@@ -60,12 +70,19 @@ def input_students
     #get another name
     puts "Please enter the name of the student"
     name = gets.chomp
+    break if name == ""
     puts "Please enter the student's hobbies"
     hobbies = gets.chomp
     puts "Please enter the student's height"
     height = gets.chomp
     puts "Please enter the student's country of birth"
     birthplace = gets.chomp
+    puts "Please enter the student's cohort"
+    cohort = gets.chomp.to_sym #added .to_sym as per request of exercise 7. Not sure what this does...
+      until months.include? cohort
+        puts "Please enter the student's cohort!"
+        cohort = gets.chomp.to_sym
+      end
   end
   # return the array of students
   students
@@ -77,9 +94,16 @@ def print_header
 end
 
 #print student with number before name
+# def print(students)
+#   students.each.with_index do |student, index|
+#     puts "#{index+1}. #{student[:name]}, Height: #{student[:height]}, Birthplace: #{student[:birthplace]}, Hobbies: #{student[:hobbies]}. (#{student[:cohort]} cohort)".center(40, "-")
+#   end
+# end
+
+# change the way students are printed to be by cohort
 def print(students)
   students.each.with_index do |student, index|
-    puts "#{index+1}. #{student[:name]}, Height: #{student[:height]}, Birthplace: #{student[:birthplace]}, Hobbies: #{student[:hobbies]}, (#{student[:cohort]} cohort)".center(40, "-")
+    puts "#{index+1}. #{student[:name]}, Height: #{student[:height]}, Birthplace: #{student[:birthplace]}, Hobbies: #{student[:hobbies]}. (#{student[:cohort]} cohort)".center(40, "-")
   end
 end
 
