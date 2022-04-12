@@ -1,23 +1,35 @@
 @students = []
 
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
+  file.readlines.each do |line|
+    name, hobbies, height, birthplace, cohort = line.chomp.split(',')
+    @students << {name: name, hobbies: hobbies, height: height, birthplace: birthplace, cohort: cohort}
+    ## the above happens in order of input line, with comma-separation,
+    #so variables that take more than one value can't have commas in them... how to fix this?
+  end
+  puts "students loaded"
+  file.close
+end
+
 def input_students
   puts "Please enter the name of the student"
   puts "To finish, just hit return twice"
   students = []
   months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   #get the first name
-  name = gets.chomp
+  name = STDIN.gets.chomp
   puts "Please enter the student's hobbies"
-  hobbies = gets.chomp
+  hobbies = STDIN.gets.chomp
   puts "Please enter the student's height"
-  height = gets.chomp
+  height = STDIN.gets.chomp
   puts "Please enter the student's country of birth"
-  birthplace = gets.chomp
+  birthplace = STDIN.gets.chomp
   puts "Please enter the student's cohort"
-  cohort = gets.chomp #added .to_sym as per request of exercise 7. Not sure what this does...
+  cohort = STDIN.gets.chomp #added .to_sym as per request of exercise 7. Not sure what this does...
     until months.include? cohort
       puts "Please enter the student's cohort!"
-      cohort = gets.chomp
+      cohort = STDIN.gets.chomp
     end
   #while the name is not empty, repeat this code (i.e. as long as they enter something)
   while !name.empty?
@@ -29,19 +41,19 @@ def input_students
   end
     #get another name
     puts "Please enter the name of the student or enter to quit"
-    name = gets.chomp
+    name = STDIN.gets.chomp
     break if name == ""
     puts "Please enter the student's hobbies"
-    hobbies = gets.chomp
+    hobbies = STDIN.gets.chomp
     puts "Please enter the student's height"
-    height = gets.chomp
+    height = STDIN.gets.chomp
     puts "Please enter the student's country of birth"
-    birthplace = gets.chomp
+    birthplace = STDIN.gets.chomp
     puts "Please enter the student's cohort"
-    cohort = gets.chomp #added .to_sym as per request of exercise 7. Not sure what this does...
+    cohort = STDIN.gets.chomp #added .to_sym as per request of exercise 7. Not sure what this does...
       until months.include? cohort
         puts "Please enter the student's cohort!"
-        cohort = gets.chomp
+        cohort = STDIN.gets.chomp
       end
   end
   # return the array of students
@@ -54,7 +66,7 @@ def interactive_menu
     #Print menu and ask user what they want to do
     #read input and save it to a variable
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
     #do what user has asked
   end
 end
@@ -65,6 +77,25 @@ def print_menu
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
   puts "9. Exit"
+end
+
+def process(selection)
+  case selection
+  when "1"
+    #input students
+    @students = input_students #a bit confused by this line. why not just input_students?
+    #really need to go through this and work out how these instance variables are interacting...
+  when "2"
+    show_students
+  when "3"
+    save_students
+  when "4"
+    load_students
+  when "9"
+    exit
+  else
+    puts "I don't know what you mean. Try again"
+  end
 end
 
 def save_students
@@ -87,20 +118,8 @@ def save_students
   file.close
 end
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, hobbies, height, birthplace, cohort = line.chomp.split(',')
-    @students << {name: name, hobbies: hobbies, height: height, birthplace: birthplace, cohort: cohort}
-    ## the above happens in order of input line, with comma-separation,
-    #so variables that take more than one value can't have commas in them... how to fix this?
-  end
-  puts "students loaded"
-  file.close
-end
-
 def try_load_students
-  filename = ARGV.first #first argument from the CLI type ruby directory.rb require <filename>
+  filename = ARGV.first #first argument from the CLI. type ruby directory.rb <filename>
   return if filename.nil? #get out of the method if no filename given
   if File.exist?(filename) #if it exists
     load_students(filename)
@@ -119,25 +138,6 @@ def show_students
   print_footer(@students)
 end
 
-def process(selection)
-  case selection
-  when "1"
-    #input students
-    @students = input_students #a bit confused by this line. why not just input_students?
-    #really need to go through this and work out how these instance variables are interacting...
-  when "2"
-    show_students
-  when "3"
-    save_students
-  when "4"
-    load_students
-  when "9"
-    exit
-  else
-    puts "I don't know what you mean. Try again"
-  end
-end
-
 def print_header
   puts "The students of Villains Academy"
   puts "----------------------------------"
@@ -154,10 +154,10 @@ end
 def print_students_list(students)
   months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   puts "enter cohort"
-  user = gets.chomp
+  user = STDIN.gets.chomp
   until months.include? user
     puts "enter cohort"
-    user = gets.chomp
+    user = STDIN.gets.chomp
   end
     students.each.with_index do |student, index|
     if student[:cohort] == user
@@ -178,6 +178,10 @@ def print_footer(names)
   #this only worked with puts, not with print... gave undefined method otherwise... wonder why...
 end
 
+try_load_students
+#have added STDIN to all the gets.chomps... still don't exactly understand
+#why and when I need to do this... something to do with getting loading in an
+#external file
 interactive_menu
 # students = input_students
 # print_header
