@@ -87,20 +87,18 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, hobbies, height, birthplace, cohort = line.chomp.split(',')
     @students << {name: name, hobbies: hobbies, height: height, birthplace: birthplace, cohort: cohort}
-    #
+    ## the above happens in order of input line, with comma-separation,
+    #so variables that take more than one value can't have commas in them... how to fix this?
   end
   puts "students loaded"
   file.close
 end
-# the above happens in order of input line... so at the moment
-#it isn't working because the second line is hobbies, and it's expecting
-#the second line to be cohort... have tried loading in the keys and values
-#for the other inputs - name, cohort etc but to no avail...
+
 
 
 
