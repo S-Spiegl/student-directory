@@ -99,6 +99,17 @@ def load_students(filename = "students.csv")
   file.close
 end
 
+def try_load_students
+  filename = ARGV.first #first argument from the CLI type ruby directory.rb require <filename>
+  return if filename.nil? #get out of the method if no filename given
+  if File.exist?(filename) #if it exists
+    load_students(filename)
+    puts "Loaded #{@students.count} student/s from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist"
+    exit
+  end
+end
 
 
 
