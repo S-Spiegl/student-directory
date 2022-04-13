@@ -1,7 +1,19 @@
 @students = []
 @months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-def load_students
+def try_load_students
+  filename = ARGV.first #first argument from the CLI. type ruby directory.rb <filename>
+  return if filename.nil? #get out of the method if no filename given
+  if File.exist?(filename) #if it exists
+    load_students(filename)
+    puts "Loaded #{@students.count} student/s from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist"
+    exit
+  end
+end
+
+def load_students(filename = "students.csv")
   puts "Please enter the name of the file you would like to load"
   filename = STDIN.gets.chomp
   if File.exist?(filename)
@@ -136,20 +148,6 @@ def save_students
   **********************
   """
 end
-
-def try_load_students
-  filename = ARGV.first #first argument from the CLI. type ruby directory.rb <filename>
-  return if filename.nil? #get out of the method if no filename given
-  if File.exist?(filename) #if it exists
-    load_students(filename)
-    puts "Loaded #{@students.count} student/s from #{filename}"
-  else
-    puts "Sorry, #{filename} doesn't exist"
-    exit
-  end
-end
-
-
 
 def show_students
   print_header
