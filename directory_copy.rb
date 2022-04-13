@@ -50,6 +50,10 @@ def print(students)
   end
 end
 
+# {:name=>"one", :cohort=>:november}
+# {:name=>"two", :cohort=>:november}
+# {:name=>"three", :cohort=>:november}
+
 # def print(students)
 # i = 0
 #   while true do

@@ -1,5 +1,5 @@
 @students = []
-
+@months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
@@ -8,16 +8,13 @@ def load_students(filename = "students.csv")
     ## the above happens in order of input line, with comma-separation,
     #so variables that take more than one value can't have commas in them... how to fix this?
   end
-  puts "students loaded"
+  puts "students successfully loaded from #{filename}"
   file.close
 end
 
 def input_students
   puts "Please enter the name of the student"
   puts "To finish, just hit return twice"
-  students = []
-  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-  #get the first name
   name = STDIN.gets.chomp
   puts "Please enter the student's hobbies"
   hobbies = STDIN.gets.chomp
@@ -26,18 +23,18 @@ def input_students
   puts "Please enter the student's country of birth"
   birthplace = STDIN.gets.chomp
   puts "Please enter the student's cohort"
-  cohort = STDIN.gets.chomp #added .to_sym as per request of exercise 7. Not sure what this does...
-    until months.include? cohort
+  cohort = STDIN.gets.chomp # originally added .to_sym as per request of exercise 7. Not sure what this does...
+    until @months.include? cohort
       puts "Please enter the student's cohort!"
       cohort = STDIN.gets.chomp
     end
   #while the name is not empty, repeat this code (i.e. as long as they enter something)
   while !name.empty?
-    students << {name: name, cohort: cohort, hobbies: hobbies, height: height, birthplace: birthplace}
-    if students.count == 1
-      puts "Now we have #{students.count} student"
+    @students << {name: name, cohort: cohort, hobbies: hobbies, height: height, birthplace: birthplace}
+    if @students.count == 1
+      puts "Now we have #{@students.count} student"
     else
-      puts "Now we have #{students.count} students"
+      puts "Now we have #{@students.count} students"
   end
     #get another name
     puts "Please enter the name of the student or enter to quit"
@@ -51,13 +48,13 @@ def input_students
     birthplace = STDIN.gets.chomp
     puts "Please enter the student's cohort"
     cohort = STDIN.gets.chomp #added .to_sym as per request of exercise 7. Not sure what this does...
-      until months.include? cohort
+      until @months.include? cohort
         puts "Please enter the student's cohort!"
         cohort = STDIN.gets.chomp
       end
   end
   # return the array of students
-  students
+  @students
 end
 
 
@@ -75,7 +72,9 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
+  #need to ask user for file to save to
   puts "4. Load the list from students.csv"
+  #need to ask user for file to load from
   puts "9. Exit"
 end
 
@@ -92,6 +91,12 @@ def process(selection)
   when "4"
     load_students
   when "9"
+    puts """
+    ****************
+    Programme closed
+        Goodbye
+    ****************
+    """
     exit
   else
     puts "I don't know what you mean. Try again"
@@ -102,7 +107,7 @@ def save_students
   # open the file for writing - If we want to write to a file in Ruby,
   # we need to 'open' the file first. The open() method returns us a
   # reference to the file that we can save as a variable called 'file'
-  file = File.open("students.csv", "w")
+  file = File.open(save_destination = "students.csv", "w")
   #iterate over the array of (hashes of) students
   @students.each do |student|
     # On every iteration we create a new array with the student name and the cohort,
@@ -116,6 +121,11 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts """
+  **********************
+  saved to #{save_destination}
+  **********************
+  """
 end
 
 def try_load_students
@@ -152,10 +162,10 @@ end
 #out the below
 
 def print_students_list(students)
-  months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-  puts "enter cohort"
+  # months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  puts "Enter the month of the cohort you would like to display"
   user = STDIN.gets.chomp
-  until months.include? user
+  until @months.include? user
     puts "enter cohort"
     user = STDIN.gets.chomp
   end
