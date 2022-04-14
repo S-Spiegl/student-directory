@@ -34,28 +34,32 @@ def process(selection)
   end
 end
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-  name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
-  end
-  file.close
-end
-
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
   # get the first name
-  name = STDIN.gets.chomp
+  @name = STDIN.gets.chomp
   # while the name is not empty, repeat this code
-  while !name.empty? do
+  while !@name.empty? do
     # add the student hash to the array
-    @students << {name: name, cohort: :november}
-    puts "Now we have #{@students.count} students"
+    add_to_array
     # get another name from the user
-    name = STDIN.gets.chomp
+    @name = STDIN.gets.chomp
   end
+end
+
+def add_to_array
+  @students << {name: @name, cohort: :november}
+  puts "Now we have #{@students.count} students"
+end
+
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
+  file.readlines.each do |line|
+  @name, cohort = line.chomp.split(',')
+    add_to_array
+  end
+  file.close
 end
 
 def show_students
@@ -94,8 +98,7 @@ end
 def try_load_students
   filename = ARGV.first# first argument from the command line
   if filename.nil? # get out of the method if it isn't given
-    puts "loading students.csv by default."
-    load_students(filename = "students.csv")
+    return
   elsif File.exists?(filename) # if it exists
     load_students(filename)
      puts "Loaded #{@students.count} from #{filename}"
