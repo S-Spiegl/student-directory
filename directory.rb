@@ -1,10 +1,15 @@
 @students = []
 @months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+@cohorts_containing_students = []
 
-def try_load_students(filename = "students.csv")
-  # filename = ARGV.first
-  # return if filename.nil?
-  if File.exist?(filename)
+#as things stand, if you don't enter an ARGV it goes to load_students and asks for a file to load
+#and if you do enter a ARGV it goes to load_students and uses that.
+
+def try_load_students
+  filename = ARGV.first
+  if filename.nil?
+    load_students(filename)
+  elsif File.exist?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} student/s from #{filename}"
   else
@@ -13,19 +18,44 @@ def try_load_students(filename = "students.csv")
   end
 end
 
-def load_students(filename = "students.csv")
+#If you replace try_load_students with the below, it will be the case that
+# if you don't enter an ARGV it loads students.csv by default
+
+# def try_load_students
+#   filename = ARGV.first
+#   if filename.nil?
+#     load_students(filename = "students.csv")
+#     puts "loaded from students.csv by default"
+#   elsif File.exist?(filename)
+#     load_students(filename)
+#     puts "Loaded #{@students.count} student/s from #{filename}"
+#   else
+#     puts "Sorry, #{filename} doesn't exist"
+#     exit
+#   end
+# end
+
+def load_students(filename)
+  if filename.nil?
   puts "Please enter the name of the file you would like to load"
   filename = STDIN.gets.chomp
-  if File.exist?(filename)
+    if File.exist?(filename)
+      file = File.open(filename, "r")
+      file.readlines.each do |line|
+        name, hobbies, height, birthplace, cohort = line.chomp.split(',')
+        @students << {name: name, hobbies: hobbies, height: height, birthplace: birthplace, cohort: cohort}
+        file.close
+      end
+    elsif !File.exist?(filename)
+      puts "Sorry, #{filename} doesn't exist."
+    end
+  elsif !filename.nil?
     file = File.open(filename, "r")
     file.readlines.each do |line|
       name, hobbies, height, birthplace, cohort = line.chomp.split(',')
       @students << {name: name, hobbies: hobbies, height: height, birthplace: birthplace, cohort: cohort}
-      puts "students successfully loaded from #{filename}"
       file.close
     end
-  elsif !File.exist?(filename)
-    puts "Sorry, #{filename} doesn't exist. Please try again."
   end
 end
 
@@ -90,14 +120,10 @@ end
 
 def process(selection)
   case selection
-  when "1"
-    @students = input_students
-  when "2"
-    show_students
-  when "3"
-    save_students
-  when "4"
-    load_students
+  when "1" then @students = input_students
+  when "2" then show_students
+  when "3" then save_students
+  when "4" then load_students
   when "9"
     puts """
     ****************
@@ -140,17 +166,21 @@ def print_header
 end
 
 def print_students_list(students)
+  students.each do |student|
+  @cohorts_containing_students << student[:cohort]
+  end
   puts "Enter the month of the cohort you would like to display"
   user = STDIN.gets.chomp
   until @months.include? user
-    puts "enter cohort"
+    puts "Please enter a valid month"
     user = STDIN.gets.chomp
   end
+    if !@cohorts_containing_students.include?(user)
+      puts "No students found in #{user} cohort"
+    end
     students.each.with_index do |student, index|
     if student[:cohort] == user
       puts "#{index+1}: #{student[:name]}, Hobbies: #{student[:hobbies]}, Height: #{student[:height]}, Birthplace: #{student[:birthplace]}. (#{student[:cohort]} cohort)"
-    elsif student[:cohort] != user
-      puts "No students in this cohort"
     end
   end
 end

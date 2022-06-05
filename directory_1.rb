@@ -19,16 +19,11 @@ end
 
 def process(selection)
   case selection
-  when "1"
-    input_students
-  when "2"
-    show_students
-  when "9"
-    exit # this will cause the program to terminate
-  when "3"
-    save_students
-  when "4"
-    load_students
+  when "1" then input_students
+  when "2" then show_students
+  when "9" then exit # this will cause the program to terminate
+  when "3" then save_students
+  when "4" then load_students
   else
     puts "I don't know what you meant, try again"
   end

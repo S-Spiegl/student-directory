@@ -106,4 +106,4 @@ def try_load_students
 end
 
 try_load_students
-interactive_menu
+# interactive_menu
